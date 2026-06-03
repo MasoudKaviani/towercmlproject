@@ -1,0 +1,50 @@
+stages:
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+      - src/preprocess.py
+      - data/raw/telecom_tower_dataset.csv
+    params:
+      - data
+      - features
+    outs:
+      - data/processed/features.csv
+
+  train:
+    cmd: python src/train.py
+    deps:
+      - src/train.py
+      - data/processed/features.csv
+    params:
+      - data
+      - features
+      - train
+    outs:
+      - models/model.pkl
+      - models/preprocessor.pkl
+
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+      - src/evaluate.py
+      - models/model.pkl
+      - models/preprocessor.pkl
+      - data/processed/features.csv
+    params:
+      - data
+      - features
+      - evaluate
+    metrics:
+      - reports/metrics.json:
+          cache: false
+    plots:
+      - reports/confusion_matrix.csv:
+          cache: false
+          x: predicted
+          y: actual
+      - reports/roc_curve.csv:
+          cache: false
+          x: fpr
+          y: tpr
+          x_label: "False Positive Rate"
+          y_label: "True Positive Rate"

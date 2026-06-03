@@ -1,0 +1,125 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+    - path: data/raw/telecom_tower_dataset.csv
+      hash: md5
+      md5: 286fe114c387ee0107fe7a609ca649b6
+      size: 504447
+    - path: src/preprocess.py
+      hash: md5
+      md5: 4abcf9bfc214c6ecf0adc3f06407e6ae
+      size: 1216
+    params:
+      params.yaml:
+        data:
+          raw_path: data/raw/telecom_tower_dataset.csv
+          processed_path: data/processed/features.csv
+          test_size: 0.2
+          random_state: 42
+        features:
+          drop_cols:
+          - tower_id
+          - province
+          target: tower_status
+          categorical_cols:
+          - tower_type
+    outs:
+    - path: data/processed/features.csv
+      hash: md5
+      md5: 79474e0603f8c5bf792479032c2b2f44
+      size: 385616
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/processed/features.csv
+      hash: md5
+      md5: 79474e0603f8c5bf792479032c2b2f44
+      size: 385616
+    - path: src/train.py
+      hash: md5
+      md5: 941e8238543a73d2f58e133161776ff3
+      size: 2155
+    params:
+      params.yaml:
+        data:
+          raw_path: data/raw/telecom_tower_dataset.csv
+          processed_path: data/processed/features.csv
+          test_size: 0.2
+          random_state: 42
+        features:
+          drop_cols:
+          - tower_id
+          - province
+          target: tower_status
+          categorical_cols:
+          - tower_type
+        train:
+          model: random_forest
+          n_estimators: 200
+          max_depth: 15
+          min_samples_split: 5
+          min_samples_leaf: 2
+          class_weight: balanced
+          random_state: 42
+          n_jobs: -1
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: ab01dd809c678d8b673e1d528701c523
+      size: 5865913
+    - path: models/preprocessor.pkl
+      hash: md5
+      md5: 821143eed758d01895718d89d5ca37a8
+      size: 1913
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - path: data/processed/features.csv
+      hash: md5
+      md5: 79474e0603f8c5bf792479032c2b2f44
+      size: 385616
+    - path: models/model.pkl
+      hash: md5
+      md5: ab01dd809c678d8b673e1d528701c523
+      size: 5865913
+    - path: models/preprocessor.pkl
+      hash: md5
+      md5: 821143eed758d01895718d89d5ca37a8
+      size: 1913
+    - path: src/evaluate.py
+      hash: md5
+      md5: 02cb53132d6c1a09d0ad16cb1d663bc5
+      size: 5059
+    params:
+      params.yaml:
+        data:
+          raw_path: data/raw/telecom_tower_dataset.csv
+          processed_path: data/processed/features.csv
+          test_size: 0.2
+          random_state: 42
+        evaluate:
+          threshold: 0.5
+          metrics_path: reports/metrics.json
+          plots_path: reports/
+        features:
+          drop_cols:
+          - tower_id
+          - province
+          target: tower_status
+          categorical_cols:
+          - tower_type
+    outs:
+    - path: reports/confusion_matrix.csv
+      hash: md5
+      md5: 70d4a2cb218891e9f3103f9aa39c83c7
+      size: 56
+    - path: reports/metrics.json
+      hash: md5
+      md5: 2ebe8204c0f462cfcbbea46447e8cde4
+      size: 106
+    - path: reports/roc_curve.csv
+      hash: md5
+      md5: 5c9e0f1deec7d04007761e303622e16a
+      size: 3729

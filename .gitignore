@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# DVC tracked (large files)
+/data/raw/
+/data/processed/
+/models/
+
+# Reports (generated)
+reports/*.png
+reports/*.jpg
+
+# Env
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

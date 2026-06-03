@@ -1,0 +1,7 @@
+# DVC ignore patterns
+**/.git
+**/.hg
+**/.svn
+**/node_modules
+**/__pycache__
+*.py[cod]

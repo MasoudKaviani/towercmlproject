@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: tower-api
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_PATH=models/model.pkl
+      - PREPROCESSOR_PATH=models/preprocessor.pkl
+      - METRICS_PATH=reports/metrics.json
+    volumes:
+      # Mount models at runtime so you can update without rebuilding
+      - ./models:/app/models:ro
+      - ./reports:/app/reports:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
