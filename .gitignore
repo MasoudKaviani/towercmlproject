@@ -10,8 +10,8 @@ env/
 
 # DVC tracked (large files)
 # /data/raw/
-# /data/processed/
-# /models/
+/data/processed/
+/models/
 
 # Reports (generated)
 reports/*.png
