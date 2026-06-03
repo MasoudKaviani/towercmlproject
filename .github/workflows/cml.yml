@@ -3,12 +3,6 @@ name: CML — Train, Evaluate & Report
 on:
   push:
     branches: [main, master]
-    paths:
-      - "src/**"
-      - "params.yaml"
-      - "dvc.yaml"
-      - "data/**"
-      - "requirements.txt"
   pull_request:
     branches: [main, master]
   workflow_dispatch:   # allow manual trigger
