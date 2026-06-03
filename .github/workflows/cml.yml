@@ -38,6 +38,18 @@ jobs:
         run: pip install -r requirements.txt
 
       # ── CML setup ─────────────────────────────────────────────────────────
+      # canvas@2 (required by CML for plot rendering) needs these native libs
+      - name: Install system deps for CML canvas
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y \
+            libcairo2-dev \
+            libpango1.0-dev \
+            libjpeg-dev \
+            libgif-dev \
+            librsvg2-dev \
+            libpixman-1-dev
+
       - name: Set up CML
         uses: iterative/setup-cml@v2
 
